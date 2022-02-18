@@ -1,8 +1,8 @@
 package com.tiagoperroni.client.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.tiagoperroni.client.dto.OrderResponseDTO;
 import com.tiagoperroni.client.model.Order;
-import com.tiagoperroni.client.model.OrderResponse;
 import com.tiagoperroni.client.service.OrderService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> save(@RequestBody Order order) throws JsonProcessingException {
+    public ResponseEntity<OrderResponseDTO> save(@RequestBody Order order) throws JsonProcessingException {
         return new ResponseEntity<>(this.orderService.save(order), HttpStatus.CREATED);
     }
 }

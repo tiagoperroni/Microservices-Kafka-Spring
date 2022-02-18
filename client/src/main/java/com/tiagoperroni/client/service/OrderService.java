@@ -2,8 +2,10 @@ package com.tiagoperroni.client.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tiagoperroni.client.dto.OrderResponseDTO;
 import com.tiagoperroni.client.exception.ProductOutOfStockException;
 import com.tiagoperroni.client.listener.MessageKafkaListener;
+import com.tiagoperroni.client.mapper.OrderMapper;
 import com.tiagoperroni.client.model.Order;
 import com.tiagoperroni.client.model.OrderResponse;
 
@@ -19,25 +21,27 @@ public class OrderService {
     @Autowired
     private KafkaService kafkaService;
 
-    public OrderResponse save(Order order) throws JsonProcessingException {
+    public OrderResponseDTO save(Order order) throws JsonProcessingException {
 
-        log.info("## Data sending by client: {}", order);
-
-        var newOrder = Order.convert(order);
+        log.info("## Data sending by client: {}", order);      
 
         ObjectMapper mapper = new ObjectMapper();
         String message = mapper.writeValueAsString(order);
+
         this.kafkaService.sendMessage(message);
-        log.info("## Data sending to Kafka: {}", newOrder);
+        log.info("## Data sending to Kafka: {}", order);
 
         OrderResponse orderResponse = null;
-        try {  
-            Thread.sleep(3000);          
+        try {            
+            Thread.sleep(500);          
             orderResponse = MessageKafkaListener.orderResponse;
+            if (orderResponse == null) {
+                Thread.sleep(3000);
+            }
             if (orderResponse.getStock().equals("out")) {
                 throw new ProductOutOfStockException("Product out of stock.");
             }
-            return orderResponse;       
+            return OrderMapper.mapperFromOrderResponse(orderResponse);       
         } catch(InterruptedException ex) {
             System.out.println(ex);
         }
