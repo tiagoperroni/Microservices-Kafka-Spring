@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-ClientApplication<client>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "mainClass": "com.tiagoperroni.client.ClientApplication",
+      "projectName": "client",
+      "args": ""
+    },
+    {
+      "type": "java",
+      "name": "Spring Boot-OrderApplication<order>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "mainClass": "com.tiagoperroni.order.OrderApplication",
+      "projectName": "order",
+      "args": ""
+    }
+  ]
+}
